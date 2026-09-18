@@ -1,15 +1,16 @@
-/* The FMP views' CSS. A plugin view is an iframe of its own, so there is no Tailwind and no theme
-   here: plain classes, the house style by hand. Square everything, one grey line (#e5e5e5), muted
-   text at #737373, 13px, and no accent colour. */
+/* The FMP views' CSS. A plugin view is an iframe of its own, so there is no Tailwind here: plain
+   classes, the house style by hand. Colours are the app's theme variables, so the views follow its
+   light and dark, each with its light value as the fallback for an app from before the theme.
+   Square everything, one grey line, muted secondary text, 13px, and no accent colour. */
 
 .fm-root {
   display: flex;
   flex-direction: column;
   height: 100%;
   width: 100%;
-  background: #fff;
-  color: #171717;
-  font: 13px/1.45 system-ui, -apple-system, sans-serif;
+  background: var(--jaspers-background, #fff);
+  color: var(--jaspers-foreground, #171717);
+  font: 13px/1.45 var(--jaspers-font-sans, system-ui, -apple-system, sans-serif);
 }
 
 .fm-bar {
@@ -18,14 +19,14 @@
   align-items: center;
   gap: 8px;
   padding: 6px 8px;
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid var(--jaspers-border, #e5e5e5);
 }
 
 .fm-input,
 .fm-select {
-  border: 1px solid #e5e5e5;
-  background: #fff;
-  color: #171717;
+  border: 1px solid var(--jaspers-border, #e5e5e5);
+  background: var(--jaspers-background, #fff);
+  color: var(--jaspers-foreground, #171717);
   font: inherit;
   padding: 2px 6px;
   outline: none;
@@ -34,7 +35,7 @@
 
 .fm-input:focus,
 .fm-select:focus {
-  border-color: #171717;
+  border-color: var(--jaspers-foreground, #171717);
 }
 
 .fm-input-symbol {
@@ -66,7 +67,7 @@
 }
 
 .fm-muted {
-  color: #737373;
+  color: var(--jaspers-muted-foreground, #737373);
 }
 
 .fm-loading {
@@ -74,13 +75,13 @@
 }
 
 .fm-error {
-  color: #dc2626;
+  color: var(--jaspers-destructive, #dc2626);
   white-space: pre-wrap;
   margin: 4px 0;
 }
 
 .fm-empty {
-  color: #737373;
+  color: var(--jaspers-muted-foreground, #737373);
   padding: 8px 0;
   margin: 0;
 }
@@ -95,7 +96,7 @@
 
 .fm-table th,
 .fm-table td {
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid var(--jaspers-border, #e5e5e5);
   padding: 3px 6px;
   text-align: left;
   white-space: nowrap;
@@ -104,7 +105,7 @@
 
 .fm-table th {
   font-weight: 500;
-  color: #737373;
+  color: var(--jaspers-muted-foreground, #737373);
 }
 
 .fm-num {
@@ -121,7 +122,7 @@
 }
 
 .fm-item {
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid var(--jaspers-border, #e5e5e5);
   padding: 6px 0;
 }
 
@@ -135,7 +136,7 @@
   display: block;
   border: 0;
   background: none;
-  color: #171717;
+  color: var(--jaspers-foreground, #171717);
   font: inherit;
   font-weight: 500;
   text-align: left;
@@ -153,5 +154,5 @@
 
 .fm-snippet {
   margin: 2px 0 0;
-  color: #404040;
+  color: var(--jaspers-foreground, #404040);
 }
