@@ -154,18 +154,36 @@ export type NewsOutput = {
   items: { date: string; site: string; title: string; url: string }[]
 }
 
+/** What main takes of a view's output, in bytes of JSON: a larger one is refused, and the view publishes nothing. */
+export const OUTPUT_MAX = 4096
+/** A title longer than this is cut, so one press release's headline cannot crowd the others out. */
+const TITLE_MAX = 200
+
+/**
+ * The newest items, at most `cap`, and as many of them as fit under main's 4 KB cap: law firms'
+ * class-action notices carry headlines of several hundred characters, and ten of those are past it.
+ * `count` stays every row, so the model still knows how many the view lists.
+ */
 export function newsOutput(symbol: string, rows: Row[] | undefined, cap = 10): NewsOutput {
   const all = rows ?? []
-  return {
-    symbol,
-    count: all.length,
-    items: all.slice(0, cap).map((row) => ({
+  const output: NewsOutput = { symbol, count: all.length, items: [] }
+  for (const row of all.slice(0, cap)) {
+    const title = text(row['title']) ?? ''
+    const item = {
       date: text(row['publishedDate']) ?? '',
       site: text(row['site']) ?? '',
-      title: text(row['title']) ?? '',
+      title: title.length > TITLE_MAX ? `${title.slice(0, TITLE_MAX - 1)}…` : title,
       url: text(row['url']) ?? '',
-    })),
+    }
+    const next = { ...output, items: [...output.items, item] }
+    if (bytes(next) > OUTPUT_MAX) break
+    output.items = next.items
   }
+  return output
+}
+
+function bytes(value: unknown): number {
+  return new TextEncoder().encode(JSON.stringify(value)).length
 }
 
 export function newsSummary(state: unknown, output: unknown): string {

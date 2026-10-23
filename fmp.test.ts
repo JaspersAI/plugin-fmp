@@ -7,6 +7,7 @@ import {
   indicatorLabel,
   mergeByDate,
   newsOutput,
+  OUTPUT_MAX,
   newsSummary,
   num,
   readNewsState,
@@ -123,6 +124,23 @@ test('the news view publishes at most ten items and says what is latest', () => 
   assert.equal(output.count, 12)
   assert.equal(newsSummary({ symbol: 'AAPL' }, output), 'AAPL news: 12 items, latest 2026-09-13 fool.com')
   assert.equal(newsSummary({ symbol: 'AAPL' }, null), 'AAPL news')
+})
+
+test('the news view keeps its output under the 4 KB main takes, however long the headlines', () => {
+  const rows = Array.from({ length: 12 }, (_, i) => ({
+    symbol: 'PZZA',
+    publishedDate: `2026-10-21 15:${String(10 + i).padStart(2, '0')}:00`,
+    site: 'globenewswire.com',
+    title: `DEADLINE ALERT for several companies (${i}): ${'shareholders are reminded of the lead plaintiff deadline '.repeat(8)}`,
+    url: `https://www.globenewswire.com/news-release/2026/10/21/${'3166'.repeat(60)}${i}/0/en/deadline-alert.html`,
+    text: 'body',
+  }))
+  const output = newsOutput('PZZA', rows)
+  assert.ok(new TextEncoder().encode(JSON.stringify(output)).length <= OUTPUT_MAX)
+  assert.ok(output.items.length > 0 && output.items.length < 10)
+  assert.ok(output.items.every((item) => item.title.length <= 200))
+  assert.equal(output.items[0]!.date, '2026-10-21 15:10:00')
+  assert.equal(output.count, 12)
 })
 
 test('the technicals view publishes the latest row and names its values', () => {
