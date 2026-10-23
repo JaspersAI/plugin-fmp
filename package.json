@@ -1,6 +1,6 @@
 {
   "name": "fmp",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Financial Modeling Prep for Jaspers Terminal: stock news and technical indicators for a company, and Form 13F.",
   "license": "MIT",
   "private": true,
